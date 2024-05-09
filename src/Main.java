@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args){
         String expression; //выражение для input
@@ -8,7 +9,7 @@ public class Main {
 
         expression = reader.next();
 
-        StringCalc(String.valueOf(expression));
+        StringCalc(String.valueOf(expression) );
     }
     public static void StringCalc(String input) {
         String a = null;//=0; //переменная а
@@ -16,33 +17,30 @@ public class Main {
         int convA = 0;
         int convB = 0;
         int rezult = 0;
-        int countWhile = 0;
         boolean isError = false; //переполнение операндов
         boolean isErrorSystemNumber = false; // Разные системы счисления
         boolean isErrorNotMath = false; // не математическая операция
         boolean isErrorNegative = false; // Отрицательное значение
-        boolean isRim = false; // 
-        String oper = null;
+        boolean isRim = false; //
         String rezultRim = null;
-        Scanner operandArray = new Scanner( input );
-        operandArray.useDelimiter("");
-        while ( operandArray.hasNext() ){//Int
-            countWhile++;
-            if(a == null) a = operandArray.next();
-            else if(oper == null){ oper = operandArray.next();}
-            else if(b == null){ b = operandArray.next();}
-                else{ // в массиве больше чем 2 операнда
-                isError = true;
-                operandArray.next();
-            }
-        }
-        if(countWhile == 1){
+        String mass[] = input.split("[-+*/]",0);
+        if(mass.length <= 1){
             isErrorNotMath = true;
+        }else if(mass.length > 2){
+            isError = true;
+        }else{
+            a = mass[0];
+            b = mass[1];
         }
         if (isErrorNotMath) {
             System.out.println("Output: ");
             System.out.println("throws Exception //т.к. строка не является математической операцией");
             System.exit(1);
+        }
+        if (isError){
+           System.out.println("Output: ");
+           System.out.println("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+           System.exit(1);
         }
     //проверка римских цифр
         String[] numeralsRim = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX",  "X"};
@@ -65,8 +63,6 @@ public class Main {
             else{
                 isErrorSystemNumber = true; //второй операнд арабская цирфа
             }
-
-
         }
         else{
             if(b.contains("I") || b.contains("V") || b.contains("X")){
@@ -74,28 +70,8 @@ public class Main {
             }
 
         }
-/*        else{
-            convA = Integer.parseInt(a);
-        }
-        if (b.contains("I") || b.contains("V") || b.contains("X")){
-            for (int i = 0; i <= numeralsRim.length; i++) {
-                if (b.equals(numeralsRim[i])){
-                    convB = Integer.parseInt(numeralsArab[i]);
-                }
-            }
-
-        }
-        else{
-            convB = Integer.parseInt(b);
-        }*/
         if(isRim){
-            if(isError){
-                System.out.println("Output: ");
-                System.out.println("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
-            } else if (isErrorNegative) {
-                System.out.println("Output: ");
-                System.out.println("throws Exception //т.к. в римской системе нет отрицательных чисел");
-            } else if (isErrorSystemNumber) {
+             if (isErrorSystemNumber) {
                 System.out.println("Output: ");
                 System.out.println("throws Exception //т.к. используются одновременно разные системы счисления");
             }
@@ -105,13 +81,19 @@ public class Main {
                     System.out.println("throws Exception //т.к. один из операндов > 10");
                     System.exit(1);
                 }
-                if (oper.equals("+")) {
+                if (input.contains("+")) {
                     rezult = convA + convB;
-                } else if (oper.equals("-")) {
-                    rezult = convA - convB;
-                } else if (oper.equals("/")) {
+                } else if (input.contains("-")) {
+                    if(convA >= convB) {
+                        rezult = convA - convB;
+                    }else{
+                        System.out.println("Output: ");
+                        System.out.println("throws Exception //т.к. в римской системе нет отрицательных чисел");
+                        System.exit(1);
+                    }
+                } else if (input.contains("/")) {
                     rezult = convA / convB;
-                } else if (oper.equals("*")) {
+                } else if (input.contains("*")) {
                     rezult = convA * convB;
                 } else {
                     System.out.println("Error operation");
@@ -126,7 +108,9 @@ public class Main {
             }
         }
         else{
-            if( convA > 10 || convB > 10){
+            convA = Integer.parseInt(a);
+            convB = Integer.parseInt(b);
+            if( convA >= 10 || convB >= 10){
                 System.out.println("Output: ");
                 System.out.println("throws Exception //т.к. один из операндов > 10");
                 System.exit(1);
@@ -144,13 +128,13 @@ public class Main {
                 System.out.println("Output: ");
                 System.out.println("throws Exception //т.к. строка не является математической операцией");
             } else {
-                if (oper.equals("+")) {
+                if (input.contains("+")) {
                     rezult = convA + convB;
-                } else if (oper.equals("-")) {
+                } else if (input.contains("-")) {
                     rezult = convA - convB;
-                } else if (oper.equals("/")) {
+                } else if (input.contains("/")) {
                     rezult = convA / convB;
-                } else if (oper.equals("*")) {
+                } else if (input.contains("*")) {
                     rezult = convA * convB;
                 } else {
                     System.out.println("Error operation");
